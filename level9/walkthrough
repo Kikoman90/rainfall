@@ -13,10 +13,10 @@ we can check their addresses:
 there is an offset of 112 bytes between the two addresses.
 both of these addresses point to the same address, 0x08048848, which points to the method called "_ZN1NplERS_"
 
--> the method "setAnnotation" is called on the first instance allocated with argv[1] as parameter
+-> the method "setAnnotation" is called on the first instance with argv[1] as parameter
 this method uses memcpy, with the address of our instance + 4 bytes as destination, and argv[1] as source.
 from disassembling the methods and constructor of class N, we deduce the content of an instance:
-- 4 byte address pointing to the "_ZN1NplERS_" method, which is actually the operator +
+- function pointer (4 bytes) pointing to the "_ZN1NplERS_" method, which is actually the operator + method
 - buffer of 100 bytes
 - an int (4 bytes), initialized with the one we send to the constructor
 

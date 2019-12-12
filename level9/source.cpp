@@ -1,5 +1,5 @@
-#include <cstdlib>
-#include <cstring>
+#include <stdlib.h>
+#include <string.h>
 
 class N {
 
@@ -8,8 +8,8 @@ public:
 
 	char	*setAnnotation(char * str);
 
-	int	operator+(N &o);
-	int	operator-(N &o);
+	virtual int	operator+(N &o);
+	virtual int	operator-(N &o);
 
 private:
 	char	_str[100];
@@ -17,7 +17,10 @@ private:
 
 };
 
-N::N(int n) : _n(n) {}
+N::N(int n) {
+	*this = 0x08048848; //vptr = vtable for N + 8 (= N::operator+)
+	_n = n;
+}
 
 char	*N::setAnnotation(char * str) {
 	return ((char *)memcpy(_str, str, strlen(str)));
