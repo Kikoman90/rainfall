@@ -18,7 +18,7 @@ private:
 };
 
 N::N(int n) {
-	*this = 0x08048848; //vptr = vtable for N + 8 (= N::operator+)
+	*this = 0x08048848; //vptr = vtable for N + 8 (-> N::operator+)
 	_n = n;
 }
 
