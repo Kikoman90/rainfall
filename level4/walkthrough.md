@@ -20,4 +20,4 @@ so our final buffer contains:
 
 > bash /tmp/run.sh
 > cat /tmp/buff | ./level4
-> 0f99ba5e9c446258a69b290407a6c60859e9c2d25b26575cafc9ae6d75e9456a
+0f99ba5e9c446258a69b290407a6c60859e9c2d25b26575cafc9ae6d75e9456a

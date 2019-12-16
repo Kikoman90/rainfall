@@ -24,4 +24,4 @@ Never use gets(). Because it is impossible to tell without knowing the data in a
 > bash /tmp/run.sh
 > cat /tmp/overf - | ./level1
 > cat /home/user/level2/.pass
-> 53a4a712787f40ec66c3c26c1f4b164dcad5552b038bb0addd69bf5bf6fa8e77
+53a4a712787f40ec66c3c26c1f4b164dcad5552b038bb0addd69bf5bf6fa8e77
