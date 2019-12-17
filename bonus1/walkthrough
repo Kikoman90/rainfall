@@ -13,10 +13,16 @@ if the integer is superior to 9, we leave the main
 
 -> finally, if the integer is equal to 1464814662, a new shell is open with the execle method
 
--> the 4 bytes of the integer are right after the 40 byte buffer on the stack, so we would overwrite it with the memcpy method with 44 as the 3rd parameter
+-> the 4 bytes of the integer are right after the 40 byte buffer on the stack, so we would overwrite it by using the memcpy method with 44 as the 3rd parameter and the right string in argv[2]
 argv[1] cannot be "11" because the main checks that the integer is inferior or equal to 9
+however we can overflow the minimum limit of signed integer to get a positive integer.
 
--> ... find argv[1], prepare payload in /tmp/buff
+n * 4 = 44 - INT32_MAX + INT32_MIN
+n ~= -1073741813
+
+if we multiply -1073741813 by 4, we overflow the minimum limit of signed integers and get 44 which has the same binary representation in unsigned and signed notation
+
+-> argv[2] will be a string of 40 chars plus the 4 byte integer value to pass the check, which is 574F4C46 in hexadecimal
 
 > scp scp -P 2222 Ressources/run.sh bonus1@127.0.0.1:/tmp
 
@@ -24,4 +30,3 @@ argv[1] cannot be "11" because the main checks that the integer is inferior or e
 > ./bonus1 "-1073741813" `cat /tmp/buff`
 $ cat /home/user/bonus2/.pass
 579bd19263eb8655e4cf7b742d75edf8c38226925d78db8163506f5191825245
-
