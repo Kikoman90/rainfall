@@ -24,7 +24,7 @@ int	main(int argc, char **argv)
 	ptr2[1] = (int)malloc(8);
 
 	strcpy((char *)ptr1[1], argv[1]);
-	strcpy((char *)ptr2[2], argv[2]);
+	strcpy((char *)ptr2[1], argv[2]);
 
 	fgets(c, 68, fopen("home/user/level8/.pass", "r"));
 	
