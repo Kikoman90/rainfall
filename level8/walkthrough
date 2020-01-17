@@ -6,7 +6,7 @@ solution level8:
 
 -> the body of the loop is a series of conditions, more specifically comparisons between the content of our buffer and hard-coded strings: "auth ", "reset", "service", "login"
 
--> the program contains an instruction that opens a new shell with the method system, but to get we need to validate two conditions:
+-> the program contains an instruction which opens a new shell with the system method, but to get it we need to validate two conditions:
 - first, the buffer needs to match with the "login" string
 - then, the 32th byte starting from address "auth" must not be zero
 
