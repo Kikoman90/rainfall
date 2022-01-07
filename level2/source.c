@@ -4,7 +4,7 @@
 
 char	*p(void)
 {
-	char		buff[76];
+	char		buff[64];
 	unsigned long	ret_addr;
 
 	fflush(stdout);
