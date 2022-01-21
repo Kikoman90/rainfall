@@ -17,9 +17,11 @@ private:
 
 };
 
-N::N(int n) {
-	*this = 0x08048848; //vptr = vtable for N + 8 (-> N::operator+)
-	_n = n;
+N::N(int n) : _n(n) {
+	// the object has a vptr embedded in it. it is saved in its first 4 bytes
+	// this->vptr = &N::operator+; -> this is done by the compiler
+	// &N::operator+ = 0x08048848 = vtable for N + 8
+	// _n = n;
 }
 
 char	*N::setAnnotation(char * str) {
